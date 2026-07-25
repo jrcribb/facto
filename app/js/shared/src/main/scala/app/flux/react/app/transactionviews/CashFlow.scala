@@ -1,9 +1,9 @@
 package app.flux.react.app.transactionviews
 
+import hydro.common.time.DateStringConversions
 import hydro.flux.react.uielements.Bootstrap
 import hydro.flux.react.uielements.Bootstrap.Size
 import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.common.Formatting._
 import hydro.common.I18n
 import app.common.money.CurrencyValueManager
 import app.flux.action.AppActions
@@ -163,8 +163,16 @@ final class CashFlow(implicit
                       cashFlowEntry match {
                         case entry: CashFlowEntry.RegularEntry =>
                           Seq[VdomElement](
-                            <.td(entry.transactionDates.map(formatDate).mkString(", ")),
-                            <.td(entry.consumedDates.map(formatDate).mkString(", ")),
+                            <.td(
+                              entry.transactionDates
+                                .map(DateStringConversions.dateToHumanFriendlyString(_))
+                                .mkString(", ")
+                            ),
+                            <.td(
+                              entry.consumedDates
+                                .map(DateStringConversions.dateToHumanFriendlyString(_))
+                                .mkString(", ")
+                            ),
                             <.td(entry.beneficiaries.map(_.shorterName).mkString(", ")),
                             <.td(entry.categories.map(_.name).mkString(", ")),
                             <.td(descriptionWithEntryCount(entry)),
@@ -196,7 +204,9 @@ final class CashFlow(implicit
                           )
                         case entry @ CashFlowEntry.BalanceCorrection(balanceCorrection, expectedAmount) =>
                           Seq[VdomElement](
-                            <.td(formatDate(balanceCorrection.checkDate)),
+                            <.td(
+                              DateStringConversions.dateToHumanFriendlyString(balanceCorrection.checkDate)
+                            ),
                             <.td(
                               ^.colSpan := 4,
                               ^.style := js.Dictionary("fontWeight" -> "bold"),

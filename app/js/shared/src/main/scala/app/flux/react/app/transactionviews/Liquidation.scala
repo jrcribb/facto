@@ -14,7 +14,7 @@ import app.models.access.AppJsEntityAccess
 import app.models.accounting.config.Account
 import app.models.accounting.config.Config
 import app.models.user.User
-import hydro.common.Formatting._
+import hydro.common.time.DateStringConversions
 import hydro.common.I18n
 import hydro.common.time.Clock
 import hydro.flux.react.uielements.Bootstrap
@@ -93,7 +93,11 @@ final class Liquidation(implicit
                 ),
                 calculateTableData = entry =>
                   Seq[VdomElement](
-                    <.td(entry.transactionDates.map(formatDate).mkString(", ")),
+                    <.td(
+                      entry.transactionDates
+                        .map(DateStringConversions.dateToHumanFriendlyString(_))
+                        .mkString(", ")
+                    ),
                     <.td(entry.beneficiaries.map(_.shorterName).mkString(", ")),
                     <.td(entry.moneyReservoirs.map(_.shorterName).mkString(", ")),
                     <.td(entry.categories.map(_.name).mkString(", ")),

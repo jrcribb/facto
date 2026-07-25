@@ -17,7 +17,7 @@ import app.models.accounting.config.Category
 import app.models.accounting.config.Config
 import hydro.common.JsLoggingUtils.LogExceptionsCallback
 import hydro.common.JsLoggingUtils.logExceptions
-import hydro.common.Formatting._
+import hydro.common.time.DateStringConversions
 import hydro.common.I18n
 import hydro.common.time.Clock
 import hydro.common.GuavaReplacement
