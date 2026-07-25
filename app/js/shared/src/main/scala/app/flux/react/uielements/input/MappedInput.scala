@@ -204,8 +204,6 @@ object MappedInput {
         DateStringConversions
           .stringToDate(string)
           .map(date => LocalDateTime.of(date, LocalTime.MIN))
-          .orElse(Some(TimeUtils.parseDateString(string.trim)))
-
       }
       override def backward(value: LocalDateTime) = value.toLocalDate.toString
     }
