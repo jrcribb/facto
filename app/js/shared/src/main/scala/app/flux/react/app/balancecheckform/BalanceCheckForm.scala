@@ -4,6 +4,7 @@ import hydro.common.I18n
 import app.common.money.CurrencyValueManager
 import app.flux.action.AppActions
 import app.flux.react.uielements.input.MappedInput
+import app.flux.react.uielements.input.MappedInput.ValueTransformer.StringToLocalDateTime
 import app.flux.react.uielements.input.bootstrap.MoneyInput
 import app.flux.router.AppPages.PopupEditorPage
 import app.models.access.AppJsEntityAccess
@@ -143,7 +144,7 @@ final class BalanceCheckForm(implicit
               dateMappedInput(
                 ref = checkDateRef,
                 defaultValue = props.operationMeta.checkDate,
-                valueTransformer = MappedInput.ValueTransformer.StringToLocalDateTime,
+                valueTransformer = new StringToLocalDateTime,
                 delegateRefFactory = TextInput.ref _,
               ) { mappedExtraProps =>
                 TextInput(

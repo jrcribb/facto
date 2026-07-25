@@ -3,8 +3,12 @@ package app.flux.react.uielements.input
 import app.flux.react.uielements.input.MappedInput.ValueTransformer
 import hydro.common.JsLoggingUtils.LogExceptionsCallback
 import hydro.common.JsLoggingUtils.logExceptions
+import hydro.common.I18n
+import hydro.common.time.Clock
+import hydro.common.time.DateStringConversions
 import hydro.common.time.LocalDateTime
 import hydro.common.time.TimeUtils
+import java.time.LocalTime
 import hydro.flux.react.uielements.input.InputBase
 import hydro.flux.react.uielements.input.InputValidator
 import japgolly.scalajs.react.Ref.ToScalaComponent
@@ -194,13 +198,14 @@ object MappedInput {
   }
 
   object ValueTransformer {
-    object StringToLocalDateTime extends ValueTransformer[String, LocalDateTime] {
+    class StringToLocalDateTime(implicit i18n: I18n, clock: Clock)
+        extends ValueTransformer[String, LocalDateTime] {
       override def forward(string: String) = {
-        try {
-          Some(TimeUtils.parseDateString(string.trim))
-        } catch {
-          case _: IllegalArgumentException => None
-        }
+        DateStringConversions
+          .stringToDate(string)
+          .map(date => LocalDateTime.of(date, LocalTime.MIN))
+          .orElse(Some(TimeUtils.parseDateString(string.trim)))
+
       }
       override def backward(value: LocalDateTime) = value.toLocalDate.toString
     }

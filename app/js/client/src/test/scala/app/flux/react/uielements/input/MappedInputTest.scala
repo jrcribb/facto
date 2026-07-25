@@ -8,11 +8,14 @@ import app.common.testing.TestModule
 import hydro.common.time.LocalDateTime
 import hydro.common.time.LocalDateTimes.createDateTime
 import hydro.flux.react.uielements.input.bootstrap.TextInput
+import app.flux.react.uielements.input.MappedInput.ValueTransformer.StringToLocalDateTime
 import japgolly.scalajs.react.vdom.VdomElement
 import utest._
 
 object MappedInputTest extends TestSuite {
-  implicit private val fake18n = new TestModule().fakeI18n
+  private val testModule = new TestModule()
+  implicit private val fake18n = testModule.fakeI18n
+  implicit private val fakeClock = testModule.fakeClock
   private val dateMappedInput = MappedInput.forTypes[String, LocalDateTime]
 
   private val defaultDate = createDateTime(2017, APRIL, 3)
@@ -41,13 +44,13 @@ object MappedInputTest extends TestSuite {
     }
 
     "ValueTransformer.StringToLocalDateTime.forward() works" - {
-      val stringToLocalDateTime = MappedInput.ValueTransformer.StringToLocalDateTime
+      val stringToLocalDateTime = new StringToLocalDateTime
       stringToLocalDateTime.forward("2017-04-03") ==> Some(createDateTime(2017, APRIL, 3))
       stringToLocalDateTime.forward("2017-04-0333") ==> None
     }
 
     "ValueTransformer.StringToLocalDateTime.backward() works" - {
-      val stringToLocalDateTime = MappedInput.ValueTransformer.StringToLocalDateTime
+      val stringToLocalDateTime = new StringToLocalDateTime
       stringToLocalDateTime.backward(createDateTime(2017, APRIL, 3)) ==> "2017-04-03"
     }
   }
@@ -61,7 +64,7 @@ object MappedInputTest extends TestSuite {
       dateMappedInput(
         ref = ref,
         defaultValue = defaultDate,
-        valueTransformer = MappedInput.ValueTransformer.StringToLocalDateTime,
+        valueTransformer = new StringToLocalDateTime,
         delegateRefFactory = TextInput.ref _,
       ) { extraProps =>
         TextInput(

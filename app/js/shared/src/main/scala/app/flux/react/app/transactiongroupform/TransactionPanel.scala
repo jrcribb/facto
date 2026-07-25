@@ -8,6 +8,7 @@ import app.common.money.CurrencyValueManager
 import app.common.money.ReferenceMoney
 import app.flux.react.uielements.input.InputWithDefaultFromReference
 import app.flux.react.uielements.input.MappedInput
+import app.flux.react.uielements.input.MappedInput.ValueTransformer.StringToLocalDateTime
 import app.flux.react.uielements.input.bootstrap.AutosuggestTextInput
 import app.flux.react.uielements.input.bootstrap.MoneyInput
 import app.flux.react.uielements.input.bootstrap.TagInput
@@ -265,7 +266,7 @@ private[transactiongroupform] final class TransactionPanel(implicit
         dateMappedInput(
           ref = transactionDateRef,
           defaultValue = state.transactionDate,
-          valueTransformer = MappedInput.ValueTransformer.StringToLocalDateTime,
+          valueTransformer = new StringToLocalDateTime,
           listener = TransactionDateListener,
           delegateRefFactory = stringInputWithDefault.ref _,
         ) { mappedExtraProps =>
@@ -293,7 +294,7 @@ private[transactiongroupform] final class TransactionPanel(implicit
         dateMappedInput(
           ref = consumedDateRef,
           defaultValue = props.defaultValues.consumedDate getOrElse LocalDateTimes.toStartOfDay(clock.now),
-          valueTransformer = MappedInput.ValueTransformer.StringToLocalDateTime,
+          valueTransformer = new StringToLocalDateTime,
           delegateRefFactory = stringInputWithDefault.ref _,
           listener = AnythingChangedListener,
         ) { mappedExtraProps =>
