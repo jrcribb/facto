@@ -6,6 +6,8 @@ import hydro.common.DesktopKeyCombination.ArrowDown
 import hydro.common.DesktopKeyCombination.SpecialKey
 import hydro.common.DesktopKeyCombination.ArrowUp
 import hydro.common.I18n
+import hydro.common.time.Clock
+import hydro.common.time.DateStringConversions
 import hydro.common.time.LocalDateTime
 import hydro.common.time.TimeUtils
 import hydro.flux.react.ReactVdomUtils.^^
@@ -98,7 +100,7 @@ object TextInput {
     def newValueOnArrowDown(currentValue: String): String
   }
   object ArrowHandler {
-    object DateHandler extends ArrowHandler {
+    class DateHandler(implicit i18n: I18n, clock: Clock) extends ArrowHandler {
       override def newValueOnArrowUp(currentValue: String): String = {
         newValueOnDelta(daysDelta = 1, currentValue)
       }
@@ -107,13 +109,10 @@ object TextInput {
       }
 
       private def newValueOnDelta(daysDelta: Int, currentValue: String): String = {
-        try {
-          val currentDate = TimeUtils.parseDateString(currentValue.trim)
-          val newDate = currentDate.plus(Duration.ofDays(daysDelta))
-          newDate.toLocalDate.toString
-        } catch {
-          case _: IllegalArgumentException => currentValue
-        }
+          DateStringConversions.stringToDate(currentValue.trim) match {
+            case Some(currentDate) => currentDate.plusDays(daysDelta).toString
+            case None => currentValue
+          }
       }
     }
   }

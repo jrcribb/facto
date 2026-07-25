@@ -287,7 +287,7 @@ private[transactiongroupform] final class TransactionPanel(implicit
               inputClasses = extraProps.inputClasses,
               focusOnMount = props.focusOnMount,
               autoComplete = false,
-              arrowHandler = TextInput.ArrowHandler.DateHandler,
+              arrowHandler = new TextInput.ArrowHandler.DateHandler,
             )
           }
         },
@@ -319,7 +319,7 @@ private[transactiongroupform] final class TransactionPanel(implicit
                 additionalValidator = mappedExtraProps.additionalValidator,
                 inputClasses = extraProps1.inputClasses ++ extraProps2.inputClasses,
                 autoComplete = false,
-                arrowHandler = TextInput.ArrowHandler.DateHandler,
+                arrowHandler = new TextInput.ArrowHandler.DateHandler,
               )
             }
           }

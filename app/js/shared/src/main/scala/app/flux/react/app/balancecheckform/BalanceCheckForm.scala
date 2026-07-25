@@ -157,7 +157,7 @@ final class BalanceCheckForm(implicit
                   additionalValidator = mappedExtraProps.additionalValidator,
                   focusOnMount = true,
                   autoComplete = false,
-                  arrowHandler = TextInput.ArrowHandler.DateHandler,
+                  arrowHandler = new TextInput.ArrowHandler.DateHandler,
                 )
               },
               MoneyInput(
