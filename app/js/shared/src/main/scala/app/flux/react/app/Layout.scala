@@ -10,6 +10,7 @@ final class Layout(implicit
     menu: Menu,
     sbadminLayout: SbadminLayout,
     inflationToggleButton: InflationToggleButton,
+    keyboardShortcutsHelpOverlay: hydro.flux.react.uielements.KeyboardShortcutsHelpOverlay,
 ) {
 
   private val component = ScalaComponent
@@ -21,6 +22,27 @@ final class Layout(implicit
         leftMenu = menu(),
         pageContent = <.span(children),
         extraNavbarTopRightContent = Seq(inflationToggleButton()),
+        extraFooter = Seq(
+          keyboardShortcutsHelpOverlay(
+            Seq(
+              "Navigation" -> Seq(
+                "Shift + Alt + E / A" -> "Everything",
+                "Shift + Alt + C" -> "Cash flow",
+                "Shift + Alt + L / V" -> "Liquidation",
+                "Shift + Alt + D" -> "Endowments",
+                "Shift + Alt + S" -> "Summary",
+                "Shift + Alt + R" -> "Chart",
+                "Shift + Alt + T / J" -> "Templates",
+                "Shift + Alt + N" -> "New entry",
+                "Shift + Alt + Up / Down" -> "Previous / next menu item",
+                "Shift + Alt + F" -> "Search",
+              ),
+              "General" -> Seq(
+                "Shift + Alt + /" -> "Show this help",
+              ),
+            )
+          )
+        ),
       )
     }
     .build
