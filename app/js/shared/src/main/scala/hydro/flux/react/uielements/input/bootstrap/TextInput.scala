@@ -109,10 +109,10 @@ object TextInput {
       }
 
       private def newValueOnDelta(daysDelta: Int, currentValue: String): String = {
-          DateStringConversions.stringToDate(currentValue.trim) match {
-            case Some(currentDate) => currentDate.plusDays(daysDelta).toString
-            case None => currentValue
-          }
+        DateStringConversions.stringToDate(currentValue.trim) match {
+          case Some(currentDate) => currentDate.plusDays(daysDelta).toString
+          case None              => currentValue
+        }
       }
     }
   }

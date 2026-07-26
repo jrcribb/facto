@@ -35,7 +35,7 @@ import hydro.common.ValidatingYamlParser.ParsableValue.MapParsableValue.StringMa
 import hydro.common.ValidatingYamlParser.ParsableValue.StringValue
 import hydro.common.time.Clock
 import hydro.common.time.LocalDateTime
-import hydro.common.time.TimeUtils
+import hydro.common.time.DateStringConversions
 import hydro.common.ScalaUtils.ifThenOption
 import hydro.common.Tags
 import hydro.common.ValidatingYamlParser
@@ -208,7 +208,7 @@ final class ExternalApi @Inject() (implicit
     validateApplicationSecret(applicationSecret)
 
     implicit val user = Users.getOrCreateRobotUser()
-    val date = TimeUtils.parseDateString(dateString)
+    val date = DateStringConversions.stringToDateStrict(dateString)
     require(Currency.of(foreignCurrencyCode).isForeign)
 
     entityAccess.persistEntityModifications(
