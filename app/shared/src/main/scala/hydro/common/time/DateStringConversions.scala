@@ -1,5 +1,6 @@
 package hydro.common.time
 
+import hydro.common.time.JavaTimeImplicits._
 import java.time.DateTimeException
 import java.time.LocalDate
 import java.time.LocalTime
@@ -114,13 +115,16 @@ object DateStringConversions {
     }
 
     def resolveDateCurrentOrNextYear(monthStr: String, dayStr: String): Option[LocalDate] = {
-      resolveDate(now.getYear, monthStr, dayStr).map { date =>
-        if (date.isBefore(now)) {
-          // If the date has already passed this year, assume next year
-          date.plusYears(1)
-        } else {
-          date
-        }
+      val dateCurrentYear = resolveDate(now.getYear, monthStr, dayStr)
+      val datePreviousYear = resolveDate(now.getYear - 1, monthStr, dayStr)
+      val dateNextYear = resolveDate(now.getYear + 1, monthStr, dayStr)
+
+      if (dateNextYear.exists(d => d < now.plusMonths(3))) {
+        dateNextYear
+      } else if (datePreviousYear.exists(d => d > now.minusMonths(3))) {
+        datePreviousYear
+      } else {
+        dateCurrentYear
       }
     }
 
