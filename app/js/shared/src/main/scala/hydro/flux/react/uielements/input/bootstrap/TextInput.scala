@@ -45,8 +45,14 @@ object TextInput {
         },
         ^.disabled := extraProps.disabled,
         ^^.ifDefined(extraProps.arrowHandler) { arrowHandler =>
-          ^.onKeyDown ==> handleKeyDown(arrowHandler, currentValue = valueString, onChange = onChange),
+          ^.onKeyDown ==> handleKeyDown(arrowHandler, currentValue = valueString, onChange = onChange)
         },
+        ^.onBlur ==> ((event: ReactEventFromInput) => {
+          extraProps.onBlurCanonicalize(valueString) match {
+            case Some(canonicalValue) => onChange(canonicalValue)
+            case None => Callback.empty
+          }
+        }),
       )
     },
   )
@@ -68,6 +74,7 @@ object TextInput {
       arrowHandler: ArrowHandler = null,
       listener: InputBase.Listener[String] = InputBase.Listener.nullInstance,
       substituteNonLatin1: Boolean = true,
+      onBlurCanonicalize: String => Option[String] = _ => None,
   )(implicit i18n: I18n): VdomElement = {
     val props = Props(
       label = label,
@@ -87,6 +94,7 @@ object TextInput {
         autoComplete = autoComplete,
         disabled = disabled,
         arrowHandler = Option(arrowHandler),
+        onBlurCanonicalize = onBlurCanonicalize,
       ),
     )
     ref.mutableRef.component(props)
@@ -127,6 +135,7 @@ object TextInput {
       autoComplete: Boolean,
       disabled: Boolean,
       arrowHandler: Option[ArrowHandler],
+      onBlurCanonicalize: String => Option[String],
   )
 
   // **************** Private helper methods ****************//

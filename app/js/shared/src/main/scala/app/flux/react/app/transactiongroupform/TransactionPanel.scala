@@ -26,6 +26,7 @@ import hydro.common.JsLoggingUtils.LogExceptionsCallback
 import hydro.common.JsLoggingUtils.logExceptions
 import app.common.SinglePendingTaskQueue
 import hydro.common.time.Clock
+import hydro.common.time.DateStringConversions
 import hydro.common.time.LocalDateTime
 import hydro.common.time.LocalDateTimes
 import hydro.common.GuavaReplacement.Iterables.getOnlyElement
@@ -288,6 +289,7 @@ private[transactiongroupform] final class TransactionPanel(implicit
               focusOnMount = props.focusOnMount,
               autoComplete = false,
               arrowHandler = new TextInput.ArrowHandler.DateHandler,
+              onBlurCanonicalize = value => DateStringConversions.stringToDate(value.trim).map(_.toString),
             )
           }
         },
@@ -320,6 +322,7 @@ private[transactiongroupform] final class TransactionPanel(implicit
                 inputClasses = extraProps1.inputClasses ++ extraProps2.inputClasses,
                 autoComplete = false,
                 arrowHandler = new TextInput.ArrowHandler.DateHandler,
+                onBlurCanonicalize = value => DateStringConversions.stringToDate(value.trim).map(_.toString),
               )
             }
           }

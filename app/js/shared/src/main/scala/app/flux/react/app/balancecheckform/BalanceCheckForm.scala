@@ -15,6 +15,7 @@ import app.models.user.User
 import hydro.common.JsLoggingUtils.LogExceptionsCallback
 import hydro.common.JsLoggingUtils.logExceptions
 import hydro.common.time.Clock
+import hydro.common.time.DateStringConversions
 import hydro.common.time.LocalDateTime
 import hydro.flux.action.Dispatcher
 import hydro.flux.react.ReactVdomUtils.<<
@@ -158,6 +159,7 @@ final class BalanceCheckForm(implicit
                   focusOnMount = true,
                   autoComplete = false,
                   arrowHandler = new TextInput.ArrowHandler.DateHandler,
+                  onBlurCanonicalize = value => DateStringConversions.stringToDate(value.trim).map(_.toString),
                 )
               },
               MoneyInput(
