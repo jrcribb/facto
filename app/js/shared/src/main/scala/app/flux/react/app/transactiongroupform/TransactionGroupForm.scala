@@ -315,7 +315,12 @@ final class TransactionGroupForm(implicit
     }
 
     def minusPanelIndex(index: Int, panelRef: Int => transactionPanel.Reference): State = {
-      copy(panelIndices = panelIndices.filter(_ != index)).withRefreshedFlowFractions(panelRef)
+      val newPanelIndices = panelIndices.filter(_ != index)
+      var newState = copy(panelIndices = newPanelIndices)
+      if (newPanelIndices.size == 1 && totalFlowRestriction == TotalFlowRestriction.ZeroSum) {
+        newState = newState.copy(totalFlowRestriction = TotalFlowRestriction.AnyTotal)
+      }
+      newState.withRefreshedFlowFractions(panelRef)
     }
 
     def withRefreshedFlowFractions(panelRef: Int => transactionPanel.Reference): State = {
@@ -423,7 +428,8 @@ final class TransactionGroupForm(implicit
                   onChange = updateTotalFlow,
                 ),
                 totalFlowRestrictionInput(
-                  defaultValue = state.totalFlowRestriction,
+                  value = state.totalFlowRestriction,
+                  allowZeroSum = state.panelIndices.size > 1,
                   onChange = updateTotalFlowRestriction,
                 ),
               ),

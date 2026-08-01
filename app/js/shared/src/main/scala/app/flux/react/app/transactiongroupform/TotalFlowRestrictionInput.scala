@@ -17,17 +17,21 @@ private[transactiongroupform] final class TotalFlowRestrictionInput(implicit i18
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
-    .initialStateFromProps[State](props => props.defaultValue)
-    .renderPS(($, props, state) =>
+    .stateless
+    .render_P(props =>
       logExceptions {
-        def button(totalFlowRestriction: TotalFlowRestriction, label: String) = {
+        def button(totalFlowRestriction: TotalFlowRestriction, label: String, disabled: Boolean = false) = {
           Bootstrap.Button(size = Size.sm, tag = <.label)(
-            ^^.ifThen(state == totalFlowRestriction) {
+            ^^.ifThen(props.value == totalFlowRestriction) {
               ^.className := "active"
             },
+            ^^.ifThen(disabled) {
+              ^.disabled := true
+            },
             ^.onClick --> LogExceptionsCallback {
-              $.setState(totalFlowRestriction).runNow()
-              props.onChangeListener(totalFlowRestriction)
+              if (!disabled) {
+                props.onChangeListener(totalFlowRestriction)
+              }
             },
             label,
           )
@@ -37,20 +41,19 @@ private[transactiongroupform] final class TotalFlowRestrictionInput(implicit i18
           VdomAttr("data-toggle") := "buttons",
           button(TotalFlowRestriction.AnyTotal, i18n("app.any-total")),
           button(TotalFlowRestriction.ChooseTotal, i18n("app.choose-total")),
-          button(TotalFlowRestriction.ZeroSum, i18n("app.zero-sum")),
+          button(TotalFlowRestriction.ZeroSum, i18n("app.zero-sum"), disabled = !props.allowZeroSum),
         )
       }
     )
     .build
 
   // **************** API ****************//
-  def apply(defaultValue: TotalFlowRestriction, onChange: TotalFlowRestriction => Unit): VdomElement = {
-    component(Props(defaultValue, onChange))
+  def apply(value: TotalFlowRestriction, allowZeroSum: Boolean, onChange: TotalFlowRestriction => Unit): VdomElement = {
+    component(Props(value, allowZeroSum, onChange))
   }
 
   // **************** Private inner types ****************//
-  private case class Props(defaultValue: TotalFlowRestriction, onChangeListener: TotalFlowRestriction => Unit)
-  private type State = TotalFlowRestriction
+  private case class Props(value: TotalFlowRestriction, allowZeroSum: Boolean, onChangeListener: TotalFlowRestriction => Unit)
 }
 
 object TotalFlowRestrictionInput {
