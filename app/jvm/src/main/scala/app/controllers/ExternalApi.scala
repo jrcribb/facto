@@ -108,7 +108,7 @@ final class ExternalApi @Inject() (implicit
         entityAccess
           .newQuerySync[Transaction]()
           .filter(searchQuery)
-          .sort(AppDbQuerySorting.Transaction.deterministicallyByConsumedDate.reversed)
+          .sort(AppDbQuerySorting.Transaction.deterministicallyByConsumedDate)
           .data()
 
       val serializableTransactions = matchedTransactions.map { transaction =>
